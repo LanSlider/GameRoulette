@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Game-Drop - Выиграй кейс с любой игрой за 59 руб!</title>
+    <title>@ViewBag.Title</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -43,44 +43,8 @@
                 </a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    @if (ViewBag.ActionCheck == "Guarantee")
-                    {
-                        <li class="dropdown dropdown-hover active">
-                            <a href="#!" class="dropdown-toggle">Гарантии <span class="label">наши гарантии</span></a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="dropdown dropdown-hover">
-                            <a href="#!" class="dropdown-toggle">Гарантии <span class="label">наши гарантии</span></a>
-                        </li>
-                    }
-                    @if (ViewBag.ActionCheck == "Comment")
-                    {
-                        <li class="dropdown dropdown-hover active">
-                            <a href="#!" class="dropdown-toggle">Отзывы <span class="label">отзывы о сайте</span></a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="dropdown dropdown-hover">
-                            <a href="#!" class="dropdown-toggle">Отзывы <span class="label">отзывы о сайте</span></a>
-                        </li>
-                    }
-                    @if (ViewBag.ActionCheck == "About")
-                    {
-                        <li class="dropdown dropdown-hover active">
-                            <a href="@Url.Action("About", "Home", null, null)">О нас <span class="label">кто мы и зачем</span></a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="dropdown dropdown-hover">
-                            <a href="@Url.Action("About", "Home", null, null)">О нас <span class="label">кто мы и зачем</span></a>
-                        </li>
-                    }
-                </ul>
+
+                @Html.Partial("_LayoutPartial")
 
                 @Html.Partial("_LoginPartial")
 
@@ -89,57 +53,19 @@
     </nav>
     <!-- /Navbar -->
     <!-- Main Content -->
-    <section class="content-wrap">
+    @{ if (ViewBag.Section == null)
+        {
+            <section class="content-wrap">
 
-        @RenderBody()
+                @RenderBody()
 
-        <!-- Footer -->
-        <footer class="youplay-footer-parallax">
-            <div class="wrapper" style="background-image: url('../../Content/images/footer-bg.jpg')">
-                <!-- Social Buttons -->
-                <div class="social">
-                    <div class="container">
-                        <h3>Всего <strong>открыто</strong> кейсов</h3>
-                        <div class="social-icons">
-                            <div class="social-icon">
-                                <a href="#!">
-                                    <i>1</i>
-
-                                </a>
-                            </div>
-                            <div class="social-icon">
-                                <a href="#!">
-                                    <i>3</i>
-
-                                </a>
-                            </div>
-                            <div class="social-icon">
-                                <a href="#!">
-                                    <i>3</i>
-
-                                </a>
-                            </div>
-                            <div class="social-icon">
-                                <a href="#!">
-                                    <i>2</i>
-
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /Social Buttons -->
-                <!-- Copyright -->
-                <div class="copyright">
-                    <div class="container">
-                        <strong>Game-Drop.com</strong> &copy; @DateTime.Now.Year. Все права защищены
-                    </div>
-                </div>
-                <!-- /Copyright -->
-            </div>
-        </footer>
-        <!-- /Footer -->
-    </section>
+            </section>
+        }
+        else
+        {
+            @RenderBody()
+        }
+    }   
     <!-- /Main Content -->
     <!-- Search Block -->
     <div class="search-block">

@@ -1,16 +1,21 @@
-﻿@if (Request.IsAuthenticated)
+﻿@{ 
+    var s = User.Identity.Name;
+    var UserName = s.Split(new char[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
+}
+
+@if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
         @Html.AntiForgeryToken()
         <ul class="nav navbar-nav navbar-right">
             <li class="dropdown dropdown-hover">
-                <a href="@Url.Action("VK", "Book", null, null)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                    hkhk <span class="label">профиль пользователя</span>
+                <a href="@Url.Action("VK", "Book", null, null)" class="dropdown-toggle">
+                    @UserName[0] <span class="label">ваш профиль</span>
                 </a>
             </li>
             <li class="dropdown dropdown-hover">
-                <a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                <a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-toggle">
                     Выйти <span class="label">смена аккаунта</span>
                 </a>
             </li>

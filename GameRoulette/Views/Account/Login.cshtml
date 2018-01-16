@@ -1,0 +1,58 @@
+﻿@model GameRoulette.Models.LoginModel
+
+@{
+    ViewBag.Title = "Логин - Game-Drop.com";
+    ViewBag.Section = "";
+}
+
+<style>
+    .validation-summary-errors ul li {
+        padding-left: 10%;
+    }
+</style>
+
+    <!-- Main Content -->
+    <section class="content-wrap full youplay-login">
+
+    <!-- Banner -->
+    <div class="youplay-banner banner-top">
+        <div class="image" style="background-image: url('../../Content/images/banner_bg.png')"></div>
+        <div class="info">
+            <div>
+                <div class="container align-center">
+                    <div class="youplay-form">
+                        <h1>Вход</h1>
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()                           
+
+                                <div class="youplay-input">                               
+                                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @placeholder = "Email", @type = "email" } })
+                                </div>
+                                <p>@Html.ValidationMessageFor(model => model.Email)</p>
+
+                                <div class="youplay-input">
+                                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @placeholder = "Пароль" } })
+                                </div>
+                                <p>@Html.ValidationMessageFor(model => model.Password)</p>
+                                @Html.ValidationSummary(true)
+
+                                <button class="btn btn-default db">Войти</button>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Banner -->
+
+    </section>
+    <!-- /Main Content -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+

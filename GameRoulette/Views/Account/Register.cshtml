@@ -1,0 +1,56 @@
+﻿@model GameRoulette.Models.RegisterModel
+
+@{
+    ViewBag.Title = "Регистрация - Game-Drop.com";
+    ViewBag.Section = "";
+}
+
+<style>
+    .validation-summary-errors ul li {  padding-left: 10%; }
+</style>
+
+<!-- Main Content -->
+<section class="content-wrap full youplay-login">
+
+    <!-- Banner -->
+    <div class="youplay-banner banner-top">
+        <div class="image" style="background-image: url('../../Content/images/banner_bg.png')"></div>
+        <div class="info">
+            <div>
+                <div class="container align-center">
+                    <div class="youplay-form">
+                        <h2>Регистрация</h2>
+                        @using (Html.BeginForm())
+                        {
+                            <p>@Html.AntiForgeryToken()</p>
+                                                        
+                            <div class="youplay-input">
+                                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @placeholder = "Email", @type = "email" } })                                
+                            </div>
+                            <p>@Html.ValidationMessageFor(model => model.Email)</p>
+
+                            <div class="youplay-input">
+                                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @placeholder = "Пароль" } })                                
+                            </div>
+                            <p>@Html.ValidationMessageFor(model => model.Password)</p>
+
+                            <div class="youplay-input">
+                                @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @placeholder = "Подтвердите пароль" } })
+                            </div>  
+                            <p>@Html.ValidationMessageFor(model => model.ConfirmPassword)</p>
+                            @Html.ValidationSummary(true)
+                            <button class="btn btn-default db">Зарегистрироваться</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Banner -->
+
+</section>
+<!-- /Main Content -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

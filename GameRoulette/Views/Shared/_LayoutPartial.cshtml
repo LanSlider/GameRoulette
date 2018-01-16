@@ -1,0 +1,39 @@
+﻿<ul class="nav navbar-nav">
+    @if (ViewBag.ActionCheck == "Guarantee")
+    {
+        <li class="dropdown dropdown-hover active">
+            <a href="#!" class="dropdown-toggle">Гарантии <span class="label">наши гарантии</span></a>
+        </li>
+    }
+    else
+    {
+        <li class="dropdown dropdown-hover">
+            <a href="#!" class="dropdown-toggle">Гарантии <span class="label">наши гарантии</span></a>
+        </li>
+    }
+    @if (ViewBag.ActionCheck == "Comment")
+    {
+        <li class="dropdown dropdown-hover active">
+            <a href="#!" class="dropdown-toggle">Отзывы <span class="label">отзывы о сайте</span></a>
+        </li>
+    }
+    else
+    {
+        <li class="dropdown dropdown-hover">
+            <a href="#!" class="dropdown-toggle">Отзывы <span class="label">отзывы о сайте</span></a>
+        </li>
+    }
+    @if (ViewBag.ActionCheck == "About")
+    {
+        <li class="dropdown dropdown-hover active">
+            <a href="@Url.Action("About", "Home", null, null)">О нас <span class="label">кто мы и зачем</span></a>
+        </li>
+    }
+    else
+    {
+        <li class="dropdown dropdown-hover">
+            <a href="@Url.Action("About", "Home", null, null)">О нас <span class="label">кто мы и зачем</span></a>
+        </li>
+    }
+</ul>
+

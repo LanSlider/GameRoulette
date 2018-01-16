@@ -1,5 +1,6 @@
 ﻿@{
     ViewBag.ActionCheck = "About";
+    ViewBag.Title = "О нас - Game-Drop.com";
 }
 <!-- Banner -->
 <section class="youplay-banner banner-top youplay-banner-parallax">
@@ -88,6 +89,20 @@
 
     </div>
 </div>
+
+<!-- Footer -->
+<footer class="youplay-footer-parallax">
+    <div class="wrapper" style="background-image: url('../../Content/images/footer-bg.jpg')">
+        <!-- Copyright -->
+        <div class="copyright">
+            <div class="container">
+                <strong>Game-Drop.com</strong> &copy; @DateTime.Now.Year. Все права защищены
+            </div>
+        </div>
+        <!-- /Copyright -->
+    </div>
+</footer>
+<!-- /Footer -->
 
 @section Scripts {
     @Scripts.Render("~/bundles/index")
