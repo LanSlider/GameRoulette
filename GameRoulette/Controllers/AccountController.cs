@@ -5,6 +5,7 @@ using GameRoulette.Models;
 using System.Net.Mail;
 using System;
 using System.Threading.Tasks;
+using DotNetOpenAuth.OpenId.RelyingParty;
 
 namespace FormsAuthApp.Controllers
 {
@@ -248,7 +249,7 @@ namespace FormsAuthApp.Controllers
             return Redirect("/");
         }
 
-        public ActionResult SteamLogin()
+        public async Task<ActionResult> SteamLogin()
         {
             
             AppID appID = null;
@@ -258,9 +259,74 @@ namespace FormsAuthApp.Controllers
             }
             if (appID != null)
             {
-                string domain = System.Web.HttpContext.Current.Request.Url.Authority;
-                string url = "http://steamcommunity.com/openid/id/" + appID.SteamKey;
-                return Redirect(url);
+                var openid = new OpenIdRelyingParty();
+                var response = openid.GetResponse();
+
+                if (response == null)
+                {
+                    using (OpenIdRelyingParty openidd = new OpenIdRelyingParty())
+                    {
+                        IAuthenticationRequest request = openidd.CreateRequest("http://steamcommunity.com/openid");
+                        request.RedirectToProvider();
+                    }
+                }
+                else
+                {
+                    switch (response.Status)
+                    {
+                        case AuthenticationStatus.Authenticated:
+                            var userID = response.ClaimedIdentifier.ToString();
+
+                            userID = userID.Split('/')[5];
+                            //"{\"response\": {\"players\": [{\"avatar\": \"https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/eb/ebec8ea57ecad775b18e748e24007ad9943af624.jpg\", \"avatarfull\": \"https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/eb/ebec8ea57ecad775b18e748e24007ad9943af624_full.jpg\", \"avatarmedium\": \"https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/eb/ebec8ea57ecad775b18e748e24007ad9943af624_medium.jpg\", \"commentpermission\": 1, \"communityvisibilitystate\": 3, \"lastlogoff\": 1516243226, \"personaname\": \"DevilWars\", \"personastate\": 0, \"personastateflags\": 0, \"primaryclanid\": \"103582791429521408\", \"profilestate\": 1, \"profileurl\": \"http://steamcommunity.com/profiles/76561198070473053/\", \"steamid\": \"76561198070473053\", \"timecreated\": 1346268753}]}}"
+                            string Url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + appID.SteamKey + "&steamids=" + userID;
+                            string User = await GetAccessToken(Url);
+                            string userName = User.Split('\"')[25];
+                            string photo = User.Split('\"')[15];
+
+                            User user = null;
+                            using (UserContext db = new UserContext())
+                            {
+                                user = db.Users.FirstOrDefault(u => u.UserID == userID);
+                            }
+                            if (user == null)
+                            {
+                                // создаем нового пользователя
+                                using (UserContext db = new UserContext())
+                                {
+                                    db.Users.Add(new User { Name = userName, UserID = userID, Image = photo });
+                                    db.SaveChanges();
+
+                                    user = db.Users.Where(u => u.UserID == userID).FirstOrDefault();
+                                }
+                                // если пользователь удачно добавлен в бд
+                                if (user != null)
+                                {
+                                    FormsAuthentication.SetAuthCookie(userName, true);
+                                    System.Web.HttpCookie cookie = new System.Web.HttpCookie("CookieGameDrop");
+                                    cookie.Value = user.Money.ToString();
+                                    Response.Cookies.Add(cookie);
+                                    return RedirectToAction("Index", "Home");
+                                }
+                            }
+                            else
+                            {
+                                FormsAuthentication.SetAuthCookie(userName, true);
+                                System.Web.HttpCookie cookie = new System.Web.HttpCookie("CookieGameDrop");
+                                cookie.Value = user.Money.ToString();
+                                Response.Cookies.Add(cookie);
+                                return RedirectToAction("Index", "Home");
+                            }
+
+                            break;
+
+                        case AuthenticationStatus.Canceled:
+                        case AuthenticationStatus.Failed:
+                            return Redirect("/");
+                            break;
+                    }
+                }
+                return Redirect("/");
             }
             else
             {

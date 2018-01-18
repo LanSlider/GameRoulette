@@ -13,11 +13,38 @@
         {
         @Html.AntiForgeryToken()
         <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown dropdown-hover">
-                <a href="@Url.Action("VK", "Book", null, null)" class="dropdown-toggle">
-                    @UserName[0] <span class="label">Ваш баланс: @cookie.Value руб</span>
-                </a>
-            </li>
+            @if (ViewBag.ActionCheck == "Recharge")
+            {
+                <li class="dropdown dropdown-hover  active">
+                    <a href="@Url.Action("UserRecharge", "Profile", null, null)" class="dropdown-toggle">
+                        Пополнить <span class="label">пополнить баланс</span>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="dropdown dropdown-hover">
+                    <a href="@Url.Action("UserRecharge", "Profile", null, null)" class="dropdown-toggle">
+                        Пополнить <span class="label">пополнить баланс</span>
+                    </a>
+                </li>
+            }
+            @if (ViewBag.ActionCheck == "Activity")
+            {
+                <li class="dropdown dropdown-hover  active">
+                    <a href="@Url.Action("UserActivity", "Profile", null, null)" class="dropdown-toggle">
+                        @UserName[0] <span class="label">ваш баланс: @cookie.Value руб</span>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="dropdown dropdown-hover">
+                    <a href="@Url.Action("UserActivity", "Profile", null, null)" class="dropdown-toggle">
+                        @UserName[0] <span class="label">ваш баланс: @cookie.Value руб</span>
+                    </a>
+                </li>
+            }
             <li class="dropdown dropdown-hover">
                 <a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-toggle">
                     Выйти <span class="label">смена аккаунта</span>
