@@ -30,4 +30,16 @@ namespace GameRoulette.Models
         [Compare("Password", ErrorMessage = "Пароли не совпадают")]
         public string ConfirmPassword { get; set; }
     }
+
+    public class RegisterModelID
+    {
+        [Required]
+        public int AppId { get; set; }
+
+        [Required]
+        public string PrivateKey { get; set; }
+
+        [Required]
+        public string SteamKey { get; set; }
+    }
 }

@@ -3,6 +3,8 @@ using System.Web.Security;
 using System.Web.Mvc;
 using GameRoulette.Models;
 using System.Net.Mail;
+using System;
+using System.Threading.Tasks;
 
 namespace FormsAuthApp.Controllers
 {
@@ -29,6 +31,9 @@ namespace FormsAuthApp.Controllers
                 if (user != null)
                 {
                     FormsAuthentication.SetAuthCookie(model.Email, true);
+                    System.Web.HttpCookie cookie = new System.Web.HttpCookie("CookieGameDrop");
+                    cookie.Value = user.Money.ToString();
+                    Response.Cookies.Add(cookie);
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -70,6 +75,9 @@ namespace FormsAuthApp.Controllers
                     if (user != null)
                     {
                         FormsAuthentication.SetAuthCookie(model.Email, true);
+                        System.Web.HttpCookie cookie = new System.Web.HttpCookie("CookieGameDrop");
+                        cookie.Value = user.Money.ToString();
+                        Response.Cookies.Add(cookie);
                         return RedirectToAction("Index", "Home");
                     }
                 }
@@ -81,6 +89,212 @@ namespace FormsAuthApp.Controllers
 
             return View(model);
         }
+
+        public ActionResult RegisterID()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RegisterID(RegisterModelID model)
+        {
+            if (ModelState.IsValid)
+            {
+                AppID user = null;
+                using (AppIDContext db = new AppIDContext())
+                {
+                    user = db.AppID.FirstOrDefault(u => u.appID == model.AppId);
+                }
+                if (user == null)
+                {
+                    // создаем нового пользователя
+                    using (AppIDContext db = new AppIDContext())
+                    {
+                        
+                        db.AppID.Add(new AppID { appID = model.AppId, PrivateKey = model.PrivateKey, SteamKey = model.SteamKey });
+                        db.SaveChanges();
+
+                        user = db.AppID.Where(u => u.appID == model.AppId).FirstOrDefault();
+                    }
+                    // если пользователь удачно добавлен в бд
+                    if (user != null)
+                    {
+                        
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Пользователь с таким логином уже существует");
+                }
+            }
+
+            return View(model);
+        }
+
+        public ActionResult VKLogin()
+        {           
+            AppID appID = null;
+            using (AppIDContext db = new AppIDContext())
+            {
+                appID = db.AppID.FirstOrDefault();
+            }
+            if (appID != null)
+            {
+                string domain = System.Web.HttpContext.Current.Request.Url.Authority;
+                string url = "https://oauth.vk.com/authorize?client_id=" + appID.appID + "&redirect_uri=http://localhost:54106/Account/VK&display=popup&response_type=code";
+                return Redirect(url);
+            }
+            else
+            {
+                using (ErrorsContext db = new ErrorsContext())
+                {
+                    db.Errors.Add(new Error { ErrorText = "VK: Пустой VKAppID!" });
+                }
+                return Redirect("/"); 
+            }            
+        }
+
+        public async Task<ActionResult> VK()
+        {
+            //http://minecraft-sodeon.ru/#access_token=6a744edc0b862ee6d2d52a0a95a3097fc7b8726ce199260ab62e5e0e4b41150658edc9ac73c9f90bab83f&expires_in=86400&user_id=114224258
+            //https://api.vk.com/method/users.get.xml?user_ids=210700286&fields=bdate&v=5.69
+            //https://oauth.vk.com/access_token?client_id=1&client_secret=H2Pk8htyFD8024mZaPHm&redirect_uri=http://mysite.ru&code=7a6fa4dff77a228eeda56603b8f53806c883f011c40b72630bb50df056f6479e52a
+            string jsonToken = null;
+
+            try
+            {
+                string path = Request.Url.AbsoluteUri;
+                string code = path.Split('=')[1];
+
+                AppID appID = null;
+                using (AppIDContext db = new AppIDContext())
+                {
+                    appID = db.AppID.FirstOrDefault();
+                }
+
+                string domain = System.Web.HttpContext.Current.Request.Url.Authority;
+                string url = "https://oauth.vk.com/access_token?client_id=" + appID.appID + "&client_secret=" + appID.PrivateKey + "&redirect_uri=http://localhost:54106/Account/VK&code=" + code;
+                jsonToken = await GetAccessToken(url);
+            }
+            catch
+            {
+                using (ErrorsContext db = new ErrorsContext())
+                {
+                    db.Errors.Add(new Error { ErrorText = "VK: Неверный VKAppID!" });
+                }
+            }
+
+            //"{\"access_token\": \"20972fdda2157fe9dcbf61754cd999bf1c03930ef45ebf8d62925a756d05340996805433e53d17010889d\", \"expires_in\": 86400, \"user_id\": 114224258}"
+            //"{\"response\": [{\"first_name\": \"Антон\", \"id\": 114224258, \"last_name\": \"Репетухо\", \"photo_200_orig\": \"https://pp.userapi.com/c836636/v836636617/49c88/lyxqzBnvsuI.jpg\"}]}"
+            if (jsonToken != null)
+            {
+                jsonToken = jsonToken.Split(' ')[5];
+                string userID = jsonToken.Split('}')[0];
+                if (userID != jsonToken)
+                {
+                    string url = "https://api.vk.com/method/users.get.json?user_ids=" + userID + "&fields=photo_200_orig&v=5.69";
+                    string jsonUser = await GetAccessToken(url);
+
+                    string firstName = jsonUser.Split('\"')[5];
+                    string lastName = jsonUser.Split('\"')[11];
+                    string idUser = jsonUser.Split(',')[1];
+                    idUser = idUser.Split(' ')[2];
+                    string photo = jsonUser.Split('\"')[15];
+
+                    User user = null;
+                    using (UserContext db = new UserContext())
+                    {
+                        user = db.Users.FirstOrDefault(u => u.UserID == idUser);
+                    }
+                    if (user == null)
+                    {
+                        // создаем нового пользователя
+                        using (UserContext db = new UserContext())
+                        {
+                            db.Users.Add(new User { Name = firstName + " " + lastName, UserID = idUser, Image = photo });
+                            db.SaveChanges();
+
+                            user = db.Users.Where(u => u.UserID == idUser).FirstOrDefault();
+                        }
+                        // если пользователь удачно добавлен в бд
+                        if (user != null)
+                        {
+                            FormsAuthentication.SetAuthCookie(firstName + " " + lastName, true);
+                            System.Web.HttpCookie cookie = new System.Web.HttpCookie("CookieGameDrop");
+                            cookie.Value = user.Money.ToString();
+                            Response.Cookies.Add(cookie);
+                            return RedirectToAction("Index", "Home");
+                        }
+                    }
+                    else
+                    {
+                        FormsAuthentication.SetAuthCookie(firstName + " " + lastName, true);
+                        System.Web.HttpCookie cookie = new System.Web.HttpCookie("CookieGameDrop");
+                        cookie.Value = user.Money.ToString();
+                        Response.Cookies.Add(cookie);
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                else
+                {
+                    using (ErrorsContext db = new ErrorsContext())
+                    {
+                        db.Errors.Add(new Error { ErrorText = "VK: Ошибка получения Токена (ID)!" });
+                    }
+                }
+            }
+            
+            return Redirect("/");
+        }
+
+        public ActionResult SteamLogin()
+        {
+            
+            AppID appID = null;
+            using (AppIDContext db = new AppIDContext())
+            {
+                appID = db.AppID.Where(u => u.SteamKey != null).FirstOrDefault();
+            }
+            if (appID != null)
+            {
+                string domain = System.Web.HttpContext.Current.Request.Url.Authority;
+                string url = "http://steamcommunity.com/openid/id/" + appID.SteamKey;
+                return Redirect(url);
+            }
+            else
+            {
+                using (ErrorsContext db = new ErrorsContext())
+                {
+                    db.Errors.Add(new Error { ErrorText = "Steam: Пустой SteamKey!" });
+                }
+                return Redirect("/");
+            }
+        }
+
+
+        public async Task<String> GetAccessToken(string url)
+        {
+            try
+            {                
+                var client = new System.Net.Http.HttpClient();
+                var response = await client.GetAsync(new Uri(url));
+                var result = await response.Content.ReadAsStringAsync();
+
+                System.Json.JsonValue json = System.Json.JsonValue.Parse(result);
+
+                return json.ToString();
+            }
+            catch
+            {
+                using (ErrorsContext db = new ErrorsContext())
+                {
+                    db.Errors.Add(new Error { ErrorText = "Ошибка await GetAccessToken(Не получен code)!" });
+                }
+                return "";
+            }
+        }
+
         public ActionResult Logoff()
         {
             FormsAuthentication.SignOut();

@@ -1,17 +1,21 @@
-﻿@{ 
+﻿@{
     var s = User.Identity.Name;
     var UserName = s.Split(new char[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
+    
 }
 
 @if (Request.IsAuthenticated)
 {
-    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
-    {
+        HttpCookie cookie = new HttpCookie("CookieGameDrop");
+        cookie = Request.Cookies["CookieGameDrop"];
+
+        using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+        {
         @Html.AntiForgeryToken()
         <ul class="nav navbar-nav navbar-right">
             <li class="dropdown dropdown-hover">
                 <a href="@Url.Action("VK", "Book", null, null)" class="dropdown-toggle">
-                    @UserName[0] <span class="label">ваш профиль</span>
+                    @UserName[0] <span class="label">Ваш баланс: @cookie.Value руб</span>
                 </a>
             </li>
             <li class="dropdown dropdown-hover">
@@ -26,12 +30,12 @@ else
 {
     <ul class="nav navbar-nav navbar-right">
         <li class="dropdown dropdown-hover">
-            <a href="@Url.Action("VK", "Book", null, null)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            <a href="@Url.Action("VKLogin", "Account", null, null)" class="dropdown-toggle">
                 <img src="~/Content/images/vk_logo.png" align="center" alt=""><span class="label">вход через вк</span>
             </a>
         </li>
         <li class="dropdown dropdown-hover">
-            <a href="@Url.Action("Steam", "Book", new {  }, null)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            <a href="@Url.Action("SteamLogin", "Account", new {  }, null)" class="dropdown-toggle">
                 <img src="~/Content/images/steam_logo.png" align="center" alt=""><span class="label">вход через стим</span>
             </a>
         </li>
@@ -48,6 +52,9 @@ else
                     <li>@Html.ActionLink("Регистрация", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })
                     <li>
                         @Html.ActionLink("Забыл пароль", "ForgotPassword", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })
+                    </li>
+                    <li>
+                        @Html.ActionLink("Регистрация id", "RegisterID", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })
                     </li>
                 </ul>
             </div>

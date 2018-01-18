@@ -1,0 +1,59 @@
+﻿@model GameRoulette.Models.RegisterModelID
+
+@{
+    ViewBag.Title = "РегистрацияID - Game-Drop.com";
+    ViewBag.Section = "";
+}
+
+<style>
+    .validation-summary-errors ul li {
+        padding-left: 10%;
+    }
+</style>
+
+<!-- Main Content -->
+<section class="content-wrap full youplay-login">
+
+    <!-- Banner -->
+    <div class="youplay-banner banner-top">
+        <div class="image" style="background-image: url('../../Content/images/banner_bg.png')"></div>
+        <div class="info">
+            <div>
+                <div class="container align-center">
+                    <div class="youplay-form">
+                        <h2>Регистрация</h2>
+                        @using (Html.BeginForm())
+                        {
+                            <p>@Html.AntiForgeryToken()</p>
+
+                            <div class="youplay-input">
+                                @Html.EditorFor(model => model.AppId, new { htmlAttributes = new { @placeholder = "ID Приложения", @type = "text" } })
+                            </div>
+                            <p>@Html.ValidationMessageFor(model => model.AppId)</p>
+
+                            <div class="youplay-input">
+                                @Html.EditorFor(model => model.PrivateKey, new { htmlAttributes = new { @placeholder = "Защищённый ключ", @type = "text" } })
+                            </div>
+                            <p>@Html.ValidationMessageFor(model => model.PrivateKey)</p>
+
+                            <div class="youplay-input">
+                                @Html.EditorFor(model => model.SteamKey, new { htmlAttributes = new { @placeholder = "Steam ключ", @type = "text" } })
+                            </div>
+                            <p>@Html.ValidationMessageFor(model => model.SteamKey)</p>
+
+                            @Html.ValidationSummary(true)
+                            <button class="btn btn-default db">Зарегистрироваться</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Banner -->
+
+</section>
+<!-- /Main Content -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
