@@ -6,9 +6,6 @@
 
 @if (Request.IsAuthenticated)
 {
-        HttpCookie cookie = new HttpCookie("CookieGameDrop");
-        cookie = Request.Cookies["CookieGameDrop"];
-
         using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
         {
         @Html.AntiForgeryToken()
@@ -33,7 +30,7 @@
             {
                 <li class="dropdown dropdown-hover  active">
                     <a href="@Url.Action("UserActivity", "Profile", null, null)" class="dropdown-toggle">
-                        @UserName[0] <span class="label">ваш баланс: @cookie.Value руб</span>
+                        @UserName[0] <span class="label">ваш баланс: @ViewData["Money"] руб</span>
                     </a>
                 </li>
             }
@@ -41,7 +38,7 @@
             {
                 <li class="dropdown dropdown-hover">
                     <a href="@Url.Action("UserActivity", "Profile", null, null)" class="dropdown-toggle">
-                        @UserName[0] <span class="label">ваш баланс: @cookie.Value руб</span>
+                        @UserName[0] <span class="label">ваш баланс: @ViewData["Money"] руб</span>
                     </a>
                 </li>
             }
@@ -89,24 +86,4 @@ else
     </ul>
 }
 
-
-
-
-<!--
-    <ul class="nav navbar-nav navbar-right">
-        <li>
-            @Html.ActionLink("Здравствуйте, "  + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
-        </li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()">Выйти</a></li>
-    </ul>
-    }
-}
-else
-{
-    <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink("Регистрация", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-        <li>@Html.ActionLink("Выполнить вход", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
-    </ul>
-}
--->
 

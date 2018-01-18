@@ -256,10 +256,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\GameDrop.mdf" />
-    <Content Include="App_Data\GameDrop_log.ldf">
-      <DependentUpon>GameDrop.mdf</DependentUpon>
-    </Content>
     <Content Include="Content\css\bootstrap.min.css" />
     <Content Include="Content\css\font-awesome.min.css" />
     <Content Include="Content\css\magnific-popup.css" />
@@ -451,8 +447,15 @@
     <Content Include="Views\Account\RegisterID.cshtml" />
     <Content Include="Views\Profile\UserActivity.cshtml" />
     <Content Include="Views\Profile\UserRecharge.cshtml" />
+    <Content Include="Views\Shared\_UserPartial.cshtml" />
+    <Content Include="Views\Profile\UserControl.cshtml" />
+    <Content Include="Views\Profile\GameControl.cshtml" />
+    <Content Include="Views\Profile\SettingControl.cshtml" />
+    <Content Include="Views\Shared\_RolePartial.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />

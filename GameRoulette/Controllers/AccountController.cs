@@ -32,9 +32,6 @@ namespace FormsAuthApp.Controllers
                 if (user != null)
                 {
                     FormsAuthentication.SetAuthCookie(model.Email, true);
-                    System.Web.HttpCookie cookie = new System.Web.HttpCookie("CookieGameDrop");
-                    cookie.Value = user.Money.ToString();
-                    Response.Cookies.Add(cookie);
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -76,9 +73,6 @@ namespace FormsAuthApp.Controllers
                     if (user != null)
                     {
                         FormsAuthentication.SetAuthCookie(model.Email, true);
-                        System.Web.HttpCookie cookie = new System.Web.HttpCookie("CookieGameDrop");
-                        cookie.Value = user.Money.ToString();
-                        Response.Cookies.Add(cookie);
                         return RedirectToAction("Index", "Home");
                     }
                 }
@@ -134,26 +128,26 @@ namespace FormsAuthApp.Controllers
         }
 
         public ActionResult VKLogin()
-        {           
-            AppID appID = null;
-            using (AppIDContext db = new AppIDContext())
-            {
-                appID = db.AppID.FirstOrDefault();
-            }
-            if (appID != null)
-            {
-                string domain = System.Web.HttpContext.Current.Request.Url.Authority;
-                string url = "https://oauth.vk.com/authorize?client_id=" + appID.appID + "&redirect_uri=http://localhost:54106/Account/VK&display=popup&response_type=code";
-                return Redirect(url);
-            }
-            else
-            {
-                using (ErrorsContext db = new ErrorsContext())
+        {          
+                AppID appID = null;
+                using (AppIDContext db = new AppIDContext())
                 {
-                    db.Errors.Add(new Error { ErrorText = "VK: Пустой VKAppID!" });
+                    appID = db.AppID.FirstOrDefault();
                 }
-                return Redirect("/"); 
-            }            
+                if (appID != null)
+                {
+                    string domain = System.Web.HttpContext.Current.Request.Url.Authority;
+                    string url = "https://oauth.vk.com/authorize?client_id=" + appID.appID + "&redirect_uri=http://localhost:54106/Account/VK&display=popup&response_type=code";
+                    return Redirect(url);
+                }
+                else
+                {
+                    using (ErrorsContext db = new ErrorsContext())
+                    {
+                        db.Errors.Add(new Error { ErrorText = "VK: Пустой VKAppID!" });
+                    }
+                    return Redirect("/");
+                }
         }
 
         public async Task<ActionResult> VK()
@@ -222,18 +216,12 @@ namespace FormsAuthApp.Controllers
                         if (user != null)
                         {
                             FormsAuthentication.SetAuthCookie(firstName + " " + lastName, true);
-                            System.Web.HttpCookie cookie = new System.Web.HttpCookie("CookieGameDrop");
-                            cookie.Value = user.Money.ToString();
-                            Response.Cookies.Add(cookie);
                             return RedirectToAction("Index", "Home");
                         }
                     }
                     else
                     {
                         FormsAuthentication.SetAuthCookie(firstName + " " + lastName, true);
-                        System.Web.HttpCookie cookie = new System.Web.HttpCookie("CookieGameDrop");
-                        cookie.Value = user.Money.ToString();
-                        Response.Cookies.Add(cookie);
                         return RedirectToAction("Index", "Home");
                     }
                 }
@@ -245,8 +233,8 @@ namespace FormsAuthApp.Controllers
                     }
                 }
             }
-            
-            return Redirect("/");
+
+            return RedirectToAction("Index", "Home");
         }
 
         public async Task<ActionResult> SteamLogin()
@@ -282,7 +270,7 @@ namespace FormsAuthApp.Controllers
                             string Url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + appID.SteamKey + "&steamids=" + userID;
                             string User = await GetAccessToken(Url);
                             string userName = User.Split('\"')[25];
-                            string photo = User.Split('\"')[15];
+                            string photo = User.Split('\"')[11];
 
                             User user = null;
                             using (UserContext db = new UserContext())
@@ -303,18 +291,12 @@ namespace FormsAuthApp.Controllers
                                 if (user != null)
                                 {
                                     FormsAuthentication.SetAuthCookie(userName, true);
-                                    System.Web.HttpCookie cookie = new System.Web.HttpCookie("CookieGameDrop");
-                                    cookie.Value = user.Money.ToString();
-                                    Response.Cookies.Add(cookie);
                                     return RedirectToAction("Index", "Home");
                                 }
                             }
                             else
                             {
                                 FormsAuthentication.SetAuthCookie(userName, true);
-                                System.Web.HttpCookie cookie = new System.Web.HttpCookie("CookieGameDrop");
-                                cookie.Value = user.Money.ToString();
-                                Response.Cookies.Add(cookie);
                                 return RedirectToAction("Index", "Home");
                             }
 
@@ -322,8 +304,7 @@ namespace FormsAuthApp.Controllers
 
                         case AuthenticationStatus.Canceled:
                         case AuthenticationStatus.Failed:
-                            return Redirect("/");
-                            break;
+                            return Redirect("/");                           
                     }
                 }
                 return Redirect("/");

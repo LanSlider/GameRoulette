@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameRoulette.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,22 +9,47 @@ namespace GameRoulette.Controllers
 {
     public class HomeController : Controller
     {
+        public void GetInfoMoney()
+        {
+            User user = null;
+            using (UserContext db = new UserContext())
+            {
+                user = db.Users.FirstOrDefault(u => u.Email == User.Identity.Name);
+                if (user != null)                
+                    ViewData["Money"] = user.Money;
+                else
+                {
+                    user = db.Users.FirstOrDefault(u => u.Name == User.Identity.Name);
+                    if (user != null)
+                        ViewData["Money"] = user.Money;
+                }
+            }
+        }
+
         public ActionResult Index()
         {
+            if (Request.IsAuthenticated)
+            {
+                GetInfoMoney();
+            }
             return View();
         }
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
-
+            if (Request.IsAuthenticated)
+            {
+                GetInfoMoney();
+            }
             return View();
         }
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
-
+            if (Request.IsAuthenticated)
+            {
+                GetInfoMoney();
+            }
             return View();
         }
     }

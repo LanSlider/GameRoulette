@@ -1,0 +1,140 @@
+﻿@{
+    if (ViewBag.Role == 1)
+    {
+        <div class="container">
+            <ul>
+                @switch (ViewData["Profil"].ToString())
+                {
+                    case "Activity":
+                        {
+                            <li class="active">
+                                <a href="javascript:void(0);">Активность</a>
+                            </li>
+
+                            <li>
+                                <a href="@Url.Action("UserRecharge", "Profile", null, null)">Пополнить счёт</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("UserControl", "Profile", null, null)">Панель пользователей <span class="badge">6</span></a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("GameControl", "Profile", null, null)">Панель игр</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("SettingControl", "Profile", null, null)">Настройки</a>
+                            </li>
+                        } break;
+
+                    case "Recharge":
+                        {
+                            <li>
+                                <a href="@Url.Action("UserActivity", "Profile", null, null)">Активность</a>
+                            </li>
+
+                            <li class="active">
+                                <a href="javascript:void(0);">Пополнить счёт</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("UserControl", "Profile", null, null)">Панель пользователей <span class="badge">6</span></a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("GameControl", "Profile", null, null)">Панель игр</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("SettingControl", "Profile", null, null)">Настройки</a>
+                            </li>
+                        } break;
+
+                    case "UserControl":
+                        {
+                            <li>
+                                <a href="@Url.Action("UserActivity", "Profile", null, null)">Активность</a>
+                            </li>
+
+                            <li>
+                                <a href="@Url.Action("UserRecharge", "Profile", null, null)">Пополнить счёт</a>
+                            </li>
+                            <li class="active">
+                                <a href="javascript:void(0);">Панель пользователей <span class="badge">6</span></a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("GameControl", "Profile", null, null)">Панель игр</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("SettingControl", "Profile", null, null)">Настройки</a>
+                            </li>
+                        }
+                        break;
+
+                    case "GameControl":
+                        {
+                            <li>
+                                <a href="@Url.Action("UserActivity", "Profile", null, null)">Активность</a>
+                            </li>
+
+                            <li>
+                                <a href="@Url.Action("UserRecharge", "Profile", null, null)">Пополнить счёт</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("UserControl", "Profile", null, null)">Панель пользователей <span class="badge">6</span></a>
+                            </li>
+                            <li class="active">
+                                <a href="javascript:void(0);">Панель игр</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("SettingControl", "Profile", null, null)">Настройки</a>
+                            </li>
+                        }
+                        break;
+
+                    case "SettingControl":
+                        {
+                            <li>
+                                <a href="@Url.Action("UserActivity", "Profile", null, null)">Активность</a>
+                            </li>
+
+                            <li>
+                                <a href="@Url.Action("UserRecharge", "Profile", null, null)">Пополнить счёт</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("UserControl", "Profile", null, null)">Панель пользователей <span class="badge">6</span></a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("GameControl", "Profile", null, null)">Панель игр</a>
+                            </li>
+                            <li class="active">
+                                <a href="javascript:void(0);">Настройки</a>
+                            </li>
+                        }
+                        break;
+                }
+            </ul>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <ul>
+                @if (ViewData["Profil"].ToString() == "Activity")
+                {
+                    <li class="active">
+                        <a href="javascript:void(0);">Активность</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("UserRecharge", "Profile", null, null)">Пополнить счёт</a>
+                    </li>
+                }
+                @if (ViewData["Profil"].ToString() == "Recharge")
+                {
+                    <li>
+                        <a href="@Url.Action("UserActivity", "Profile", null, null)">Активность</a>
+                    </li>
+                    <li class="active">
+                        <a href="javascript:void(0);">Пополнить счёт</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+}
+

@@ -1,0 +1,30 @@
+﻿<div>
+    <div class="container youplay-user">
+        <a href="@ViewData["Image"]" class="angled-img image-popup">
+            <div class="img">
+                <img src="@ViewData["Image"]" alt="">
+            </div>           
+        </a>
+        <!--
+            -->
+        <div class="user-data">
+            <h2>@ViewData["Name"]</h2>
+            <div class="location"> Имя Пользователя</div>
+            <div class="activity">
+                <div>
+                    <div class="num">@ViewData["ID"]</div>
+                    <div class="title">Ваш ID</div>
+                </div>
+                <div>
+                    <div class="num">12</div>
+                    <div class="title">Games</div>
+                </div>
+                <div>
+                    <div class="num">@ViewData["Money"]</div>
+                    <div class="title">Баланс (руб)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
