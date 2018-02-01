@@ -34,6 +34,11 @@ namespace GameRoulette
                       "~/Scripts/carousel.js",
                       "~/Scripts/jquery.countdown.min.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/chat").Include(
+                      "~/Scripts/jquery.signalR-2.2.2.js",
+                      "~/app/app.js",
+                      "~/signalr/hubs"));
+
             bundles.Add(new ScriptBundle("~/bundles/profile").Include(
                       "~/Scripts/jarallax.min.js",
                       "~/Scripts/jquery.magnific-popup.min.js"));

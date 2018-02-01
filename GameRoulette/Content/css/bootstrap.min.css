@@ -5866,3 +5866,8 @@ td.visible-print,th.visible-print{
  }    
 
  }    
+
+.liv {
+    
+    line-height: 0.5;
+}

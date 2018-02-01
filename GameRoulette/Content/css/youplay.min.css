@@ -3150,7 +3150,7 @@ img.rounded{
        
 .angled-img .over-info{ 
     position:absolute; 
-    top:0; 
+    top:20%; 
     left:0; 
     width:90%; 
     height:100%; 
@@ -3178,7 +3178,7 @@ img.rounded{
        
 .angled-img .over-info>div>div{ 
     display:table-cell; 
-    vertical-align:middle 
+    vertical-align:bottom 
 }
        
 .angled-img .bottom-info{ 

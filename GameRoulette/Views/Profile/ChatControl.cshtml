@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.ActionCheck = "Activity";
+    ViewData["Profil"] = "ChatControl";
+    ViewBag.Title = "Онлайн чат - Game-Drop.com";
+}
+
+<!-- Banner -->
+<div class="youplay-banner banner-top youplay-banner-parallax small">
+    <div class="image" style="background-image: url('../../Content/images/game-diablo-iii-1400x656.jpg')">
+    </div>
+    <div class="youplay-user-navigation">
+
+        @Html.Partial("_RolePartial")
+
+    </div>
+
+    <div class="info">
+
+        @Html.Partial("_UserPartial")
+
+    </div>
+</div>
+<!-- /Banner -->
+<div class="container youplay-content">
+    <div class="row">
+        <div class="col-md-9">
+            <h1>Онлайн чат</h1>
+            <div class="row">
+                <div class="col-md-4">
+                    <h3>Пользователи</h3>
+                    <ul id="user"></ul>
+                </div>
+                <div class="col-md-4">
+                    <br />
+                    <input type="text" id="txt" class="form-control" />
+                    <p></p>
+                    <button id="send" class="btn btn-success">Отправить</button>
+                </div>
+                <div class="col-md-4">
+                    <h3>Сообщения</h3>
+                    <ul id="message"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/Scripts/jquery.signalR-2.2.2.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="~/app/app.js"></script>
+}
+

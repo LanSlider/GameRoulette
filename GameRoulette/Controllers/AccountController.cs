@@ -64,7 +64,7 @@ namespace FormsAuthApp.Controllers
                     using (UserContext db = new UserContext())
                     {
                         var email = new MailAddress(model.Email);
-                        db.Users.Add(new User { Name = email.User, Email = model.Email, Password = model.Password });
+                        db.Users.Add(new User { Name = email.User, Email = model.Email, Password = model.Password, Image = "/Content/images/user-avatar.png" });
                         db.SaveChanges();
 
                         user = db.Users.Where(u => u.Email == model.Email && u.Password == model.Password).FirstOrDefault();

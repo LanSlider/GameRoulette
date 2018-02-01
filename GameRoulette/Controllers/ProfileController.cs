@@ -35,6 +35,22 @@ namespace GameRoulette.Controllers
             }
         }
 
+        public void GetInfoID()
+        {
+            AppID appID = null;
+            using (AppIDContext db = new AppIDContext())
+            {
+                appID = db.AppID.FirstOrDefault();
+                if (appID != null)
+                {
+                    ViewData["appID"] = appID.appID;
+                    ViewData["SteamID"] = appID.SteamKey;
+                    ViewData["SecretKey"] = appID.PrivateKey; 
+                }
+                
+            }
+        }
+
         // GET: Profile
         public ActionResult UserActivity()
         {
@@ -71,7 +87,16 @@ namespace GameRoulette.Controllers
         public ActionResult SettingControl()
         {
             GetInfoUser();
+            GetInfoID();
             if (ViewBag.Role == 1)
+                return View();
+            return Redirect("/");
+        }
+
+        public ActionResult ChatControl()
+        {
+            GetInfoUser();
+            if (ViewBag.Role == 0 || ViewBag.Role == 1)
                 return View();
             return Redirect("/");
         }
